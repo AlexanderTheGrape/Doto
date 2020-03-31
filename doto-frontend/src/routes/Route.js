@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import SettingsPage from "../components/pages/Settings/SettingsPage";
 import Login from "../components/pages/Login/Login";
 import Calendar from "../components/pages/Calendar/Calendar";
@@ -7,6 +7,7 @@ import NotFound from "../components/pages/NotFound";
 import { ThemeContext } from "../context/ThemeContext";
 import CookieManager from "../helpers/CookieManager";
 import "../tailwind-generated.css";
+import PrivateRoute from "../helpers/PrivateRoute";
 
 /**
  * When the user is redirected after they are logged in to their google account
@@ -32,6 +33,8 @@ const saveToCookies = params => {
     const [email, jwt] = params;
     CookieManager.set("email", email);
     CookieManager.set("jwt", jwt);
+    console.log(CookieManager.get("jwt"));
+    console.log(CookieManager.get("email"));
 };
 
 // Sets the routing to the appropriate pages, passing in the colour theme based on user setting
@@ -42,17 +45,14 @@ const Routes = () => {
     return (
         <Switch>
             <Route exact path="/" component={Login} />
-            <Route path="/settings">
-                <ThemeContext.Provider value={[theme, setTheme]}>
-                    <SettingsPage />
-                </ThemeContext.Provider>
-            </Route>
-            <Route path="/calendar">
-                <ThemeContext.Provider value={[theme, setTheme]}>
-                    <Calendar />
-                </ThemeContext.Provider>
-            </Route>
+
+            <ThemeContext.Provider value={[theme, setTheme]}>
+                <PrivateRoute path="/calendar" component={Calendar}/>
+                <PrivateRoute path="/settings" component={SettingsPage}/>
+            </ThemeContext.Provider>
+
             <Route path="/login" component={Login} />
+
             <Route component={NotFound} />
         </Switch>
     );
