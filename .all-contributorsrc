@@ -12,7 +12,9 @@
       "profile": "https://github.com/AlexanderTheGrape",
       "contributions": [
         "test",
-        "code"
+        "code",
+        "bug",
+        "design"
       ]
     }
   ],
